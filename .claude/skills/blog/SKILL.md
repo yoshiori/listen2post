@@ -16,16 +16,15 @@ If your output looks anything like the transcript — same sentence order, same 
 
 ## Steps
 
-1. Call `get_my_podcasts` to list available podcasts
-2. If multiple podcasts exist, ask the user to choose one
-3. Call `get_podcast_episodes` and show the episode list
-4. Ask the user which episode to turn into a blog post
-5. Call `get_episode_transcript` with format `txt`
-6. **Read the full transcript silently. Do not show it to the user.**
-7. Extract the 2–4 real topics discussed. Discard throat-clearing, tangents, and meta-comments about the podcast itself.
-8. For each topic, write a `##` section as polished prose. Reorder, merge, and cut freely.
-9. Write a title that captures the main theme — not "エピソードXXのまとめ".
-10. Output only the finished blog post in Hatena Markdown. No preamble, no "以下がブログ記事です".
+1. Default podcast: `ヨシオリの声日記` (`01hy2gyy79qt8bsbz01grf720e`). Skip podcast selection unless the user explicitly asks for a different one (in which case call `get_my_podcasts` and let them choose).
+2. Call `get_podcast_episodes` with the default podcast id and show the episode list
+3. Ask the user which episode to turn into a blog post
+4. Call `get_episode_transcript` with format `txt`
+5. **Read the full transcript silently. Do not show it to the user.**
+6. Extract the 2–4 real topics discussed. Discard throat-clearing, tangents, and meta-comments about the podcast itself.
+7. For each topic, write a `##` section as polished prose. Reorder, merge, and cut freely.
+8. Write a title that captures the main theme — not "エピソードXXのまとめ".
+9. Output only the finished blog post in Hatena Markdown. No preamble, no "以下がブログ記事です".
 
 ## Hard rules (do not violate)
 
