@@ -1,0 +1,3 @@
+[env]
+OBSIDIAN_VAULT = "/home/yoshiori/Documents/obsidian"
+LISTEN_API_TOKEN = "{{ exec(command='op read op://Private/Listen-api-read/credential') }}"
