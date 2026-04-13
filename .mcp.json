@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "listen-mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@ondinc/listen-mcp-server"],
+      "env": {
+        "LISTEN_API_TOKEN": "${LISTEN_API_TOKEN}",
+        "LISTEN_GRAPHQL_URL": "https://listen.style/graphql"
+      }
+    }
+  }
+}
