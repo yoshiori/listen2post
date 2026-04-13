@@ -16,7 +16,7 @@ If your output looks anything like the transcript — same sentence order, same 
 
 ## Steps
 
-1. Preflight: check `OBSIDIAN_VAULT` env var is set. If not, abort with: "OBSIDIAN_VAULT が未設定です。`.env` に設定して `op run --env-file=.env -- claude` で起動してください。" and stop.
+1. Preflight: check `OBSIDIAN_VAULT` env var is set. If not, abort with: "OBSIDIAN_VAULT が未設定です。`mise.toml` を設定して、このディレクトリで `claude` を起動してください。" and stop.
 2. Default podcast: `ヨシオリの声日記` (`01hy2gyy79qt8bsbz01grf720e`). Skip podcast selection unless the user explicitly asks for a different one (in which case call `get_my_podcasts` and let them choose).
 3. Call `get_podcast_episodes` with the default podcast id and show the episode list. **Remember each episode's `title` and `pubDate` — you need them for the filename.**
 4. Ask the user which episode to turn into a blog post
@@ -41,8 +41,13 @@ If your output looks anything like the transcript — same sentence order, same 
 - ❌ Do NOT include timestamps, speaker labels, or "[笑]" style annotations
 - ❌ Do NOT show the raw transcript to the user at any point
 - ❌ Do NOT echo the post body into the chat after writing the file — only the file path
+- ❌ Do NOT stack exclamation parentheticals ("（これホントに）", "（すごい気に入ってる）") — use them sparingly, max once per post
+- ❌ Do NOT invent vocabulary the speaker didn't use (e.g. don't expand "UI" to "UI/UX", don't add "UX" / "体験設計" etc. unless the transcript did)
+- ❌ Do NOT explain jargon the speaker left unexplained — match the reader assumption of the original (e.g. if Yoshiori says "M5Stack" without defining it, don't add "（ディスプレイ付き Arduino）")
 - ✅ DO start in medias res, straight into the substance
 - ✅ DO cut ruthlessly — a 20-minute episode often becomes a short post
+- ✅ DO preserve "なぜそれを選んだか" details when present (e.g. "3Dプリンタ持ってないのでレゴ"). Constraint-driven choices make the post less generic
+- ✅ DO match the speaker's emotional temperature. If they sound calm and matter-of-fact, the post should too — don't amp it up with extra 感嘆
 
 ## Style (Yoshiori voice)
 
@@ -77,8 +82,12 @@ Ask yourself:
 3. Is there a conclusion/summary section? → Delete it.
 4. Does each `##` section read as standalone prose, not a transcription? → Fix if not.
 5. Does it sound like Yoshiori, or like a neutral AI summary? → Inject voice.
+6. Am I using more than one emphatic parenthetical ("（これホントに）" etc.)? → Cut to at most one.
+7. Did I add any term the speaker didn't say (UX, 体験設計, fancy synonyms)? → Revert to their vocabulary.
+8. Did I define jargon the speaker left undefined? → Remove the gloss — trust the reader.
+9. Is the emotional temperature louder than the audio? → Tone down. Matter-of-fact stays matter-of-fact.
 
-Only after all five pass, output the post.
+Only after all pass, output the post.
 
 ## Output format
 
