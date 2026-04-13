@@ -16,15 +16,21 @@ If your output looks anything like the transcript — same sentence order, same 
 
 ## Steps
 
-1. Default podcast: `ヨシオリの声日記` (`01hy2gyy79qt8bsbz01grf720e`). Skip podcast selection unless the user explicitly asks for a different one (in which case call `get_my_podcasts` and let them choose).
-2. Call `get_podcast_episodes` with the default podcast id and show the episode list
-3. Ask the user which episode to turn into a blog post
-4. Call `get_episode_transcript` with format `txt`
-5. **Read the full transcript silently. Do not show it to the user.**
-6. Extract the 2–4 real topics discussed. Discard throat-clearing, tangents, and meta-comments about the podcast itself.
-7. For each topic, write a `##` section as polished prose. Reorder, merge, and cut freely.
-8. Write a title that captures the main theme — not "エピソードXXのまとめ".
-9. Output only the finished blog post in Hatena Markdown. No preamble, no "以下がブログ記事です".
+1. Preflight: check `OBSIDIAN_VAULT` env var is set. If not, abort with: "OBSIDIAN_VAULT が未設定です。`.env` に設定して `op run --env-file=.env -- claude` で起動してください。" and stop.
+2. Default podcast: `ヨシオリの声日記` (`01hy2gyy79qt8bsbz01grf720e`). Skip podcast selection unless the user explicitly asks for a different one (in which case call `get_my_podcasts` and let them choose).
+3. Call `get_podcast_episodes` with the default podcast id and show the episode list. **Remember each episode's `title` and `pubDate` — you need them for the filename.**
+4. Ask the user which episode to turn into a blog post
+5. Call `get_episode_transcript` with format `txt`
+6. **Read the full transcript silently. Do not show it to the user.**
+7. Extract the 2–4 real topics discussed. Discard throat-clearing, tangents, and meta-comments about the podcast itself.
+8. For each topic, write a `##` section as polished prose. Reorder, merge, and cut freely.
+9. Write a blog title that captures the main theme — not "エピソードXXのまとめ". (This `# ` title can differ from the LISTEN episode title; the filename uses the LISTEN title.)
+10. Write the finished post to `${OBSIDIAN_VAULT}/Notes/listen2post/<YYYY-MM-DD>-<sanitized LISTEN title>.md`:
+    - Date: first 10 chars of the episode's `pubDate`.
+    - Sanitize title: replace any of `/ \ : * ? " < > |` and newlines with `-`. Trim whitespace. Keep Japanese characters as-is.
+    - If `Notes/listen2post/` doesn't exist, create it first with `mkdir -p` via Bash.
+    - Use the `Write` tool to create the file.
+11. Output only the absolute file path of the written file. No post body, no preamble, no "書き出しました" message — just the path on one line.
 
 ## Hard rules (do not violate)
 
@@ -34,6 +40,7 @@ If your output looks anything like the transcript — same sentence order, same 
 - ❌ Do NOT end with "まとめ" / "おわりに" sections or "というわけで今日はこんな感じでした" closers
 - ❌ Do NOT include timestamps, speaker labels, or "[笑]" style annotations
 - ❌ Do NOT show the raw transcript to the user at any point
+- ❌ Do NOT echo the post body into the chat after writing the file — only the file path
 - ✅ DO start in medias res, straight into the substance
 - ✅ DO cut ruthlessly — a 20-minute episode often becomes a short post
 
@@ -75,4 +82,6 @@ Only after all five pass, output the post.
 
 ## Output format
 
-Hatena Blog Markdown. Title as `# タイトル`. Section headers as `##`. No code fences around the whole thing.
+File contents: Hatena Blog Markdown. Title as `# タイトル`. Section headers as `##`. No code fences around the whole thing.
+
+Chat output after writing: a single line containing only the absolute path to the written `.md` file.

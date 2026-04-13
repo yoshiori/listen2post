@@ -14,6 +14,10 @@ Generates Yoshiori-style Hatena blog posts from LISTEN voice diary episodes.
 
 The LISTEN API token is stored in 1Password at `Private > Listen-api-read`. `.env` only contains a reference (`op://...`), so the raw token is never committed.
 
+### Obsidian vault
+
+Generated blog posts are written to `${OBSIDIAN_VAULT}/Notes/listen2post/YYYY-MM-DD-<episode title>.md`. Set `OBSIDIAN_VAULT` in `.env` to the absolute path of your vault root. The filename uses the LISTEN episode title (not the post title) so it stays stable if you edit the post heading later.
+
 ### Launch
 
 ```sh
@@ -24,7 +28,7 @@ op run --env-file=.env -- claude
 
 ## Usage
 
-Inside Claude Code, run `/blog`. It walks through podcast selection → episode selection → blog post generation end to end.
+Inside Claude Code, run `/blog`. It walks through episode selection → blog post generation, then writes the post into the Obsidian vault. The only chat output after generation is the absolute file path — open it in Obsidian to review and copy.
 
 ## Files
 
